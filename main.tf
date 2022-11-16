@@ -74,7 +74,7 @@ resource "aws_subnet" "MyPrivateSubnet" {
 ################################################################################
 # Internet Gateway Creation
 ################################################################################
-/*
+
 resource "aws_internet_gateway" "MyIGW" {
   count = var.create_vpc && var.create_igw && length(var.public_subnets) > 0 ? 1 : 0
   vpc_id = aws_vpc.myvpc[0].id
@@ -200,4 +200,4 @@ resource "aws_iam_role_policy" "log_group_permission" {
 }
 EOF
 }
-*/
+
