@@ -38,11 +38,9 @@ resource "aws_vpc" "myvpc" {
   enable_classiclink             = null 
   enable_classiclink_dns_support = null
 
-  #tags = merge(
-  #  { "Name" = var.name },
-  #  var.tags,
-  #  var.vpc_tags,
-  #)
+  tags = {
+    Name = "Network-Prod-E1-VPC001"
+  }
 }
 
 ################################################################################
@@ -58,7 +56,7 @@ resource "aws_subnet" "MyPublicSubnet" {
   assign_ipv6_address_on_creation = var.assign_ipv6_address_on_creation
   ipv6_cidr_block = var.enable_ipv6 && length(var.public_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.myvpc[0].ipv6_cidr_block, 8, var.public_subnet_ipv6_prefixes[count.index]) : null
   tags = {
-    Name = "Public-Subnet-${ element(var.azs, count.index)}"
+    Name = "Network-Prod-E1-Public-SNET00${count.index +1}"
   }
 }
 
@@ -74,7 +72,7 @@ resource "aws_subnet" "MyPrivateSubnet" {
   assign_ipv6_address_on_creation = var.assign_ipv6_address_on_creation
   ipv6_cidr_block = var.enable_ipv6 && length(var.private_subnet_ipv6_prefixes) > 0 ? cidrsubnet(aws_vpc.myvpc[0].ipv6_cidr_block, 8, var.private_subnet_ipv6_prefixes[count.index]) : null
   tags = {
-    Name =  "Private-Subnet-${ element(var.azs, count.index)}"
+    Name =  "Network-Prod-E1-Private-SNET00${count.index +1}"
   }
 }
 
@@ -87,7 +85,7 @@ resource "aws_internet_gateway" "MyIGW" {
   vpc_id = aws_vpc.myvpc[0].id
 
   tags = {
-    Name = "MyIGW" 
+    Name = "Network-Prod-E1-IGW001" 
   }
   
 }
@@ -99,7 +97,7 @@ resource "aws_internet_gateway" "MyIGW" {
 resource "aws_eip" "MyEIP" {
 vpc = true
 tags = {
-  Name ="MyEIP" 
+  Name ="Network-Prod-E1-NGW001" 
   }
 }
 
@@ -119,7 +117,7 @@ resource "aws_route_table" "DefaultRT" {
   vpc_id = aws_vpc.myvpc[0].id
 
   tags = {
-    Name = "DefaultRT-${ aws_vpc.myvpc[0].id}" }
+    Name = "Network-Prod-E1-Public-RT001" }
 }
 ################################################################################
 # Private Route Table
@@ -130,7 +128,7 @@ resource "aws_route_table" "PrivateRT" {
   vpc_id = aws_vpc.myvpc[0].id
 
   tags = {
-    Name = "PrivateRT-${ aws_vpc.myvpc[0].id}" }
+    Name = "Network-Prod-E1-Public-RT001" }
 }
 ################################################################################
 # Adding Routes to the Route Tables
@@ -172,11 +170,11 @@ resource "aws_flow_log" "flowlogs" {
 }
 
 resource "aws_cloudwatch_log_group" "loggroup" {
-  name = "vpc-flow-logs"
+  name = "Network-Prod-E1-CW001"
 }
 
 resource "aws_iam_role" "vpc_flow_logs" {
-  name = "vpc_flow_logs"
+  name = "Network-Prod-E1-FlowLogs-IAM001"
 
   assume_role_policy = <<EOF
 {
@@ -235,11 +233,11 @@ resource "aws_instance" "openvpn" {
               EOF
 
   tags = {
-    Name = "openvpn"
+    Name = "Network-Prod-E1-VPN001"
   }
 }
 resource "aws_security_group" "instance" {
-  name        = "openvpn-default"
+  name        = "Network-Prod-E1-SG001"
   description = "OpenVPN security group"
   vpc_id = aws_vpc.myvpc[0].id
   ingress {
@@ -284,14 +282,24 @@ output "access_vpn_url" {
 }
 
 ################################################################################
-# Creating VPN Server (OpenVPN)
+# Creating Transit Gateway
 ################################################################################
 resource "aws_ec2_transit_gateway" "network-transit" {
   description = "network-transit"
+  tags = {
+    Name = "Network-Prod-E1-TG001"
+  }
 }
+
+################################################################################
+# Creating Reachability Analyzer
+################################################################################
 
 resource "aws_ec2_network_insights_path" "test" {
   source      = aws_instance.openvpn.id
   destination = aws_internet_gateway.MyIGW[0].id
   protocol    = "tcp"
+  tags = {
+    Name = "Network-Prod-E1-RA001"
+  }
 }
