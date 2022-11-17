@@ -135,7 +135,7 @@ Section for declaring the Variables for VPN Server
 variable "server_region" {
   description = "Region to deploy server"
   type        = string
-  default     = "eu-central-1"
+  default     = "us-east-1"
 }
 
 variable "server_username" {
