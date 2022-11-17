@@ -227,6 +227,7 @@ resource "aws_instance" "openvpn" {
   ami                    = local.images[var.server_region]
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.instance.id]
+  subnet_id = aws_subnet.MyPublicSubnet[0].id
 
   user_data = <<-EOF
               admin_user=${var.server_username}
@@ -287,4 +288,10 @@ output "access_vpn_url" {
 ################################################################################
 resource "aws_ec2_transit_gateway" "network-transit" {
   description = "network-transit"
+}
+
+resource "aws_ec2_network_insights_path" "test" {
+  source      = aws_instance.openvpn.id
+  destination = aws_internet_gateway.MyIGW.id
+  protocol    = "tcp"
 }
