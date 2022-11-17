@@ -279,5 +279,5 @@ resource "aws_security_group" "instance" {
 
 output "access_vpn_url" {
   value       = "https://${aws_instance.openvpn.public_ip}:943/admin"
-  description = "The public url address of the vpn server"
+  description = "The public url of the vpn server"
 }
