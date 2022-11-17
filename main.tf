@@ -152,13 +152,13 @@ resource "aws_route" "nat_gateway" {
 resource "aws_route_table_association" "public_subnet_asso" {
  count = length(var.public_subnets)
  subnet_id      = element(aws_subnet.MyPublicSubnet[*].id, count.index)
- route_table_id = aws_route_table.DefaultRT[*].id
+ route_table_id = aws_route_table.DefaultRT[0].id
 }
 
 resource "aws_route_table_association" "private_subnet_asso" {
  count = length(var.private_subnets)
  subnet_id      = element(aws_subnet.MyPrivateSubnet[*].id, count.index)
- route_table_id = aws_route_table.PrivateRT[*].id
+ route_table_id = aws_route_table.PrivateRT[0].id
 }
 ################################################################################
 # Enabling VPC Flow Logs
