@@ -281,3 +281,11 @@ output "access_vpn_url" {
   value       = "https://${aws_instance.openvpn.public_ip}:943/admin"
   description = "The public url of the vpn server"
 }
+
+################################################################################
+# Creating VPN Server (OpenVPN)
+################################################################################
+resource "aws_ec2_transit_gateway" "network-transit" {
+  description = "network-transit"
+  transit_gateway_cidr_blocks = var.transit_gateway_cidr
+}

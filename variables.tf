@@ -149,3 +149,12 @@ variable "server_password" {
   type        = string
   default     = "password"
 }
+
+/* 
+Section for declaring the Variables for VPN Server
+*/
+variable "transit_gateway_cidr" {
+  description = "CIDR Block for Transit Gateway"
+  type        = string
+  default     = "10.0.0.0/12"
+}
