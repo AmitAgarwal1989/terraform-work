@@ -287,5 +287,4 @@ output "access_vpn_url" {
 ################################################################################
 resource "aws_ec2_transit_gateway" "network-transit" {
   description = "network-transit"
-  transit_gateway_cidr_blocks = var.transit_gateway_cidr
 }
