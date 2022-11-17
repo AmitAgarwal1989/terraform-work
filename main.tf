@@ -241,7 +241,7 @@ resource "aws_instance" "openvpn" {
 resource "aws_security_group" "instance" {
   name        = "openvpn-default"
   description = "OpenVPN security group"
-
+  vpc_id = aws_vpc.myvpc[0].id
   ingress {
     from_port   = 22
     to_port     = 22
