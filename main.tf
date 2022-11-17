@@ -292,6 +292,6 @@ resource "aws_ec2_transit_gateway" "network-transit" {
 
 resource "aws_ec2_network_insights_path" "test" {
   source      = aws_instance.openvpn.id
-  destination = aws_internet_gateway.MyIGW.id
+  destination = aws_internet_gateway.MyIGW[0].id
   protocol    = "tcp"
 }
