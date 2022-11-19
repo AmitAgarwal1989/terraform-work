@@ -308,7 +308,7 @@ resource "aws_ec2_network_insights_path" "test" {
 # Creating NetworkACL
 ################################################################################
 resource "aws_default_network_acl" "default" {
-  default_network_acl_id = aws_vpc.myvpc.default_network_acl_id
+  default_network_acl_id = aws_vpc.myvpc[0].default_network_acl_id
 
   ingress {
     protocol   = -1
@@ -335,7 +335,7 @@ resource "aws_default_network_acl" "default" {
 # Creating Security Group
 ################################################################################
 resource "aws_default_security_group" "default" {
-  vpc_id = aws_vpc.myvpc.id
+  vpc_id = aws_vpc.myvpc[0].id
 
   ingress {
     protocol  = -1
