@@ -105,7 +105,7 @@ resource "aws_nat_gateway" "MyNat" {
 allocation_id = aws_eip.MyEIP.id
 subnet_id = aws_subnet.MyPublicSubnet[0].id
 tags = {
-  Name ="Network-Prod-E1-NAT001" }
+  Name ="Network-Prod-E1-NGW001" }
 depends_on = [aws_internet_gateway.MyIGW]
 }
 ################################################################################
@@ -352,6 +352,7 @@ resource "aws_default_security_group" "default" {
   }
   tags = {
     Name = "Network-Prod-E1-SG001"
+}
 }
 ################################################################################
 # Creating Route 53 Hosted Zone
