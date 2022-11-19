@@ -105,7 +105,7 @@ resource "aws_nat_gateway" "MyNat" {
 allocation_id = aws_eip.MyEIP.id
 subnet_id = aws_subnet.MyPublicSubnet[0].id
 tags = {
-  Name ="MyNatGateway" }
+  Name ="Network-Prod-E1-NAT001" }
 depends_on = [aws_internet_gateway.MyIGW]
 }
 ################################################################################
@@ -128,7 +128,7 @@ resource "aws_route_table" "PrivateRT" {
   vpc_id = aws_vpc.myvpc[0].id
 
   tags = {
-    Name = "Network-Prod-E1-Public-RT001" }
+    Name = "Network-Prod-E1-Private-RT001" }
 }
 ################################################################################
 # Adding Routes to the Route Tables
@@ -302,4 +302,63 @@ resource "aws_ec2_network_insights_path" "test" {
   tags = {
     Name = "Network-Prod-E1-RA001"
   }
+}
+
+################################################################################
+# Creating NetworkACL
+################################################################################
+resource "aws_default_network_acl" "default" {
+  default_network_acl_id = aws_vpc.myvpc.default_network_acl_id
+
+  ingress {
+    protocol   = -1
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  egress {
+    protocol   = -1
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+  tags = {
+    Name = "Network-Prod-E1-NACL001"
+  }
+}
+################################################################################
+# Creating Security Group
+################################################################################
+resource "aws_default_security_group" "default" {
+  vpc_id = aws_vpc.myvpc.id
+
+  ingress {
+    protocol  = -1
+    self      = true
+    from_port = 0
+    to_port   = 0
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = {
+    Name = "Network-Prod-E1-SG001"
+}
+################################################################################
+# Creating Route 53 Hosted Zone
+################################################################################
+resource "aws_route53_zone" "main" {
+  name = "flinkaws.com"
+  tags = {
+    Name = "Network-Prod-E1-Route001"
+}
 }
