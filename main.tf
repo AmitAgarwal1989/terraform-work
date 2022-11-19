@@ -274,6 +274,9 @@ resource "aws_security_group" "instance" {
     protocol    = "udp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  tags = {
+    Name = "Network-Prod-E1-SGVPN001"
+  }
 }
 
 output "access_vpn_url" {
