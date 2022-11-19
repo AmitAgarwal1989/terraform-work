@@ -362,7 +362,4 @@ resource "aws_default_security_group" "default" {
 ################################################################################
 resource "aws_route53_zone" "main" {
   name = "flinkaws.com"
-  tags = {
-    Name = "Network-Prod-E1-Route001"
-}
 }
