@@ -294,6 +294,35 @@ resource "aws_ec2_transit_gateway" "network-transit" {
   }
 }
 
+resource "aws_ec2_transit_gateway_vpc_attachment" "transit-attachment" {
+  count = length(var.public_subnets)
+  subnet_ids         = element(aws_subnet.MyPublicSubnet[*].id, count.index)
+  transit_gateway_id = aws_ec2_transit_gateway.network-transit.id
+  vpc_id             = aws_vpc.myvpc[0].id
+  ipv6_support       = enable
+  tags = {
+    "Name" = "Network-Prod-E1-TGAttachment001"
+  }
+}
+################################################################################
+# Creating Resource Access Manager
+################################################################################
+
+resource "aws_ram_resource_share" "resource_share" {
+  name                      = "Network-Prod-E1-ShareTGW001"
+  allow_external_principals = true
+}
+
+resource "aws_ram_resource_association" "example" {
+  resource_arn       = aws_ec2_transit_gateway.network-transit.arn
+  resource_share_arn = aws_ram_resource_share.resource_share.arn
+}
+
+resource "aws_ram_principal_association" "example" {
+  principal          = var.org_id
+  resource_share_arn = aws_ram_resource_share.resource_share.arn
+}
+
 ################################################################################
 # Creating Reachability Analyzer
 ################################################################################

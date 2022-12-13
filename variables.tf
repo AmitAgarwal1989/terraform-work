@@ -149,3 +149,9 @@ variable "server_password" {
   type        = string
   default     = "password"
 }
+
+variable "org_id" {
+  description = "Admin Password to access server"
+  type        = string
+  default     = "o-kaxeottu9f"
+}
