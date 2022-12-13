@@ -151,7 +151,7 @@ variable "server_password" {
 }
 
 variable "org_id" {
-  description = "Admin Password to access server"
+  description = "ARN For Org_ID"
   type        = string
-  default     = "o-kaxeottu9f"
+  default     = "arn:aws:organizations::564820142115:organization/o-kaxeottu9f"
 }
