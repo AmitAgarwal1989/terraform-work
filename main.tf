@@ -299,7 +299,7 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "transit-attachment" {
   subnet_ids         = element(aws_subnet.MyPublicSubnet[*].id, count.index)
   transit_gateway_id = aws_ec2_transit_gateway.network-transit.id
   vpc_id             = aws_vpc.myvpc[0].id
-  ipv6_support       = enable
+  ipv6_support       = "enable"
   tags = {
     "Name" = "Network-Prod-E1-TGAttachment001"
   }
