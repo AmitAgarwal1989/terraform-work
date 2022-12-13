@@ -289,6 +289,7 @@ output "access_vpn_url" {
 ################################################################################
 resource "aws_ec2_transit_gateway" "network-transit" {
   description = "network-transit"
+  auto_accept_shared_attachments  = "enable"
   tags = {
     Name = "Network-Prod-E1-TG001"
   }
