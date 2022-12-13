@@ -293,16 +293,10 @@ resource "aws_ec2_transit_gateway" "network-transit" {
     Name = "Network-Prod-E1-TG001"
   }
 }
-data "aws_subnet_ids" "subnet_ids"{
-  vpc_id = aws_vpc.myvpc[0].id
-  filter {
-    name = "tag:Name"
-    values = ["Network-Prod-E1-Public"]
-  }
-}
+
 resource "aws_ec2_transit_gateway_vpc_attachment" "transit-attachment" {
   for_each = data.aws_subnet_ids.subnet_ids.ids
-  subnet_ids         = [each.value]
+  subnet_ids         = [aws_subnet.MyPublicSubnet[0].id,aws_subnet.MyPublicSubnet[1].id]
   transit_gateway_id = aws_ec2_transit_gateway.network-transit.id
   vpc_id             = aws_vpc.myvpc[0].id
   ipv6_support       = "enable"
